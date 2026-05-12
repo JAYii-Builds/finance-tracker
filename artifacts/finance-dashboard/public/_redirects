@@ -1,0 +1,4 @@
+/api/transactions/:id  /.netlify/functions/transaction-by-id?id=:id  200
+/api/transactions      /.netlify/functions/transactions               200
+/api/stats             /.netlify/functions/stats                      200
+/*                     /index.html                                    200
