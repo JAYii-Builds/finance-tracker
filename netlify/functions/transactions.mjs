@@ -1,6 +1,9 @@
 import pg from "pg";
 
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new pg.Pool({ 
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 const headers = {
   "Content-Type": "application/json",
@@ -47,8 +50,8 @@ export const handler = async (event) => {
 
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   } catch (err) {
-    console.error("transactions error:", err);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: "Internal server error" }) };
+    console.error("Full error:", err.message, err.stack);
+    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   } finally {
     client.release();
   }
