@@ -33,7 +33,7 @@ export const handler = async (event) => {
     const userId = await getUserId(event);
     const id =
       event.queryStringParameters?.id ??
-      new URL(event.rawUrl).pathname.split("/").filter(Boolean).pop();
+      event.path?.split("/").filter(Boolean).pop();
     if (!id || isNaN(Number(id))) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: "Missing or invalid id" }) };
     }
