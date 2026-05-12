@@ -16,7 +16,9 @@ const headers = {
 async function getUserId(event) {
   const token = event.headers.authorization?.replace("Bearer ", "");
   if (!token) throw new Error("Unauthorized");
-  const payload = await verifyToken(token, { secretKey: process.env.CLERK_SECRET_KEY });
+  const payload = await verifyToken(token, {
+    secretKey: process.env.CLERK_SECRET_KEY,
+  });
   return payload.sub;
 }
 
@@ -29,7 +31,9 @@ export const handler = async (event) => {
   }
   try {
     const userId = await getUserId(event);
-    const id = event.queryStringParameters?.id;
+    const id =
+      event.queryStringParameters?.id ??
+      new URL(event.rawUrl).pathname.split("/").filter(Boolean).pop();
     if (!id || isNaN(Number(id))) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: "Missing or invalid id" }) };
     }
