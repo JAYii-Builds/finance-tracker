@@ -1,0 +1,55 @@
+Dependencies installation error                               
+9:58:51 PM: ────────────────────────────────────────────────────────────────
+9:58:51 PM: ​
+9:58:51 PM:   Error message
+9:58:51 PM:   A Netlify Function is using "@clerk/backend" but that dependency has not been installed yet.
+9:58:51 PM: ​
+9:58:51 PM:   By default, dependencies inside a Netlify Function's "package.json" are not automatically installed.
+  There are several ways to fix this problem:
+9:58:51 PM:     - Removing your Function's "package.json" and adding the dependencies to the project's top-level "package.json" instead. This is the fastest and safest solution.
+9:58:51 PM:     - Running "npm install" or "yarn" inside your Netlify Function in your build command.
+9:58:51 PM:     - Adding the following plugin to your "netlify.toml":
+9:58:51 PM: ​
+9:58:51 PM:   [[plugins]]
+9:58:51 PM:   package = "@netlify/plugin-functions-install-core"
+9:58:51 PM: ​​
+9:58:51 PM:   Build failed with 1 error:
+9:58:51 PM:   netlify/functions/transaction-by-id.mjs:2:34: ERROR: Could not resolve "@clerk/backend"
+9:58:51 PM: ​
+9:58:51 PM:   Resolved config
+9:58:51 PM:   build:
+9:58:51 PM:     command: pnpm --filter @workspace/finance-dashboard run build:netlify
+9:58:51 PM:     commandOrigin: config
+9:58:51 PM:     environment:
+9:58:51 PM:       - CLERK_SECRET_KEY
+9:58:51 PM:       - DATABASE_URL
+9:58:51 PM:       - VITE_CLERK_PUBLISHABLE_KEY
+9:58:51 PM:       - NODE_VERSION
+9:58:51 PM:     publish: /opt/build/repo/artifacts/finance-dashboard/dist
+9:58:51 PM:     publishOrigin: config
+9:58:51 PM:   functionsDirectory: /opt/build/repo/netlify/functions
+9:58:51 PM:   plugins:
+9:58:51 PM:     - inputs: {}
+9:58:51 PM:       origin: config
+9:58:51 PM:       package: "@netlify/plugin-functions-install-core"
+9:58:51 PM:   redirects:
+9:58:51 PM:     - force: true
+9:58:51 PM:       from: /api/transactions/:id
+9:58:51 PM:       status: 200
+9:58:51 PM:       to: /.netlify/functions/transaction-by-id?id=:id
+9:58:51 PM:     - force: true
+9:58:51 PM:       from: /api/transactions
+9:58:51 PM:       status: 200
+9:58:51 PM:       to: /.netlify/functions/transactions
+9:58:51 PM:     - force: true
+9:58:51 PM:       from: /api/stats
+9:58:51 PM:       status: 200
+9:58:51 PM:       to: /.netlify/functions/stats
+9:58:51 PM:     - from: /*
+      status: 200
+      to: /index.html
+  redirectsOrigin: config
+9:58:51 PM: Build failed due to a user error: Build script returned non-zero exit code: 2
+9:58:55 PM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
+9:58:55 PM: Failing build: Failed to build site
+9:58:56 PM: Finished processing build request in 27.102s

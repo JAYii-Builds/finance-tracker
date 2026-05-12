@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@clerk/backend": "^1.26.0",
     "pg": "^8.13.3"
   }
 }
