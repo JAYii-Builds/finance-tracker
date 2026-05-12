@@ -16,9 +16,7 @@ const headers = {
 async function getUserId(event) {
   const token = event.headers.authorization?.replace("Bearer ", "");
   if (!token) throw new Error("Unauthorized");
-  const payload = await verifyToken(token, {
-    secretKey: process.env.CLERK_SECRET_KEY,
-  });
+  const payload = await verifyToken(token, { secretKey: process.env.CLERK_SECRET_KEY });
   return payload.sub;
 }
 
