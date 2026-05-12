@@ -1,12 +1,10 @@
 import pg from "pg";
-import { createClerkClient } from "@clerk/backend";
+import { verifyToken } from "@clerk/backend";
 
-const pool = new pg.Pool({ 
+const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
 });
-
-const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 const headers = {
   "Content-Type": "application/json",
@@ -18,8 +16,10 @@ const headers = {
 async function getUserId(event) {
   const token = event.headers.authorization?.replace("Bearer ", "");
   if (!token) throw new Error("Unauthorized");
-  const { sub } = await clerk.verifyToken(token);
-  return sub;
+  const payload = await verifyToken(token, {
+    secretKey: process.env.CLERK_SECRET_KEY,
+  });
+  return payload.sub;
 }
 
 export const handler = async (event) => {
