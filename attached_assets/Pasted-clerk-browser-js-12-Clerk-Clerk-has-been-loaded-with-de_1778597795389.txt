@@ -1,0 +1,788 @@
+clerk.browser.js:12 Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+q @ clerk.browser.js:12
+transactions:1  Failed to load resource: the server responded with a status of 500 ()
+stats:1  Failed to load resource: the server responded with a status of 500 ()
+transactions:1  Failed to load resource: the server responded with a status of 500 ()
+stats:1  Failed to load resource: the server responded with a status of 500 ()
+transactions:1  Failed to load resource: the server responded with a status of 500 ()
+stats:1  Failed to load resource: the server responded with a status of 500 ()
+stats:1  Failed to load resource: the server responded with a status of 500 ()
+transactions:1  Failed to load resource: the server responded with a status of 500 ()
+stats:1  Failed to load resource: the server responded with a status of 500 ()
+transactions:1  Failed to load resource: the server responded with a status of 500 ()
+stats:1  Failed to load resource: the server responded with a status of 500 ()
+transactions:1  Failed to load resource: the server responded with a status of 500 ()
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+await in fetch
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+await in fetch
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+await in fetch
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+await in fetch
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/transactions 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+GE @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+await in fetch
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
+index-DHvB_pbT.js:23  GET https://trackify-finance.netlify.app/api/stats 500 (Internal Server Error)
+jo @ index-DHvB_pbT.js:23
+await in jo
+aO @ index-DHvB_pbT.js:23
+queryFn @ index-DHvB_pbT.js:23
+l @ index-DHvB_pbT.js:23
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.then
+(anonymous) @ index-DHvB_pbT.js:23
+Promise.catch
+E @ index-DHvB_pbT.js:23
+start @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+#f @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+setInterval
+setInterval @ index-DHvB_pbT.js:23
+setInterval @ index-DHvB_pbT.js:23
+#b @ index-DHvB_pbT.js:23
+#v @ index-DHvB_pbT.js:23
+onQueryUpdate @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+#a @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+await in fetch
+#f @ index-DHvB_pbT.js:23
+fetch @ index-DHvB_pbT.js:23
+refetch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+batch @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+await in (anonymous)
+(anonymous) @ index-DHvB_pbT.js:23
+onFocus @ index-DHvB_pbT.js:23
+(anonymous) @ index-DHvB_pbT.js:23
+t @ index-DHvB_pbT.js:23
