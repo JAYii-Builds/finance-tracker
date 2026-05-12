@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Finance Dashboard"
+version = "1.0.0"
+id = "artifacts/finance-dashboard"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23522
+
+[services.development]
+run = "pnpm --filter @workspace/finance-dashboard run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/finance-dashboard", "run", "build" ]
+publicDir = "artifacts/finance-dashboard/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23522"
+BASE_PATH = "/"
