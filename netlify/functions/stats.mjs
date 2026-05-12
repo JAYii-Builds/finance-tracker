@@ -1,9 +1,12 @@
 import pg from "pg";
+import { createClerkClient } from "@clerk/backend";
 
 const pool = new pg.Pool({ 
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
+
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 const headers = {
   "Content-Type": "application/json",
@@ -12,36 +15,44 @@ const headers = {
   "Access-Control-Allow-Methods": "GET, OPTIONS",
 };
 
+async function getUserId(event) {
+  const token = event.headers.authorization?.replace("Bearer ", "");
+  if (!token) throw new Error("Unauthorized");
+  const { sub } = await clerk.verifyToken(token);
+  return sub;
+}
+
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers, body: "" };
   }
-
   if (event.httpMethod !== "GET") {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
-
-  const client = await pool.connect();
   try {
-    const result = await client.query(
-      `SELECT
-        COALESCE(SUM(CASE WHEN type = 'income'  THEN amount::float ELSE 0 END), 0) AS "totalIncome",
-        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount::float ELSE 0 END), 0) AS "totalExpenses"
-       FROM transactions`
-    );
-    const { totalIncome, totalExpenses } = result.rows[0];
-    const netBalance = totalIncome - totalExpenses;
-    const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ totalIncome, totalExpenses, netBalance, savingsRate }),
-    };
+    const userId = await getUserId(event);
+    const client = await pool.connect();
+    try {
+      const result = await client.query(
+        `SELECT
+          COALESCE(SUM(CASE WHEN type = 'income'  THEN amount::float ELSE 0 END), 0) AS "totalIncome",
+          COALESCE(SUM(CASE WHEN type = 'expense' THEN amount::float ELSE 0 END), 0) AS "totalExpenses"
+         FROM transactions WHERE user_id = $1`,
+        [userId]
+      );
+      const { totalIncome, totalExpenses } = result.rows[0];
+      const netBalance = totalIncome - totalExpenses;
+      const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ totalIncome, totalExpenses, netBalance, savingsRate }),
+      };
+    } finally {
+      client.release();
+    }
   } catch (err) {
-    console.error("Full error:", err.message, err.stack);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
-  } finally {
-    client.release();
+    const status = err.message === "Unauthorized" ? 401 : 500;
+    return { statusCode: status, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
