@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUser, useClerk } from "@clerk/react";
 import {
   useGetTransactions,
   getGetTransactionsQueryKey,
@@ -52,6 +53,9 @@ function timeSince(date: Date) {
 
 export default function Dashboard() {
   const qc = useQueryClient();
+  const { user } = useUser();
+  const { signOut } = useClerk();
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Housing");
@@ -146,9 +150,22 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen" style={{ background: "#0f0f0f", color: "#e5e5e5", fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
-      <div style={{ borderBottom: "1px solid #222", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div style={{ borderBottom: "1px solid #222", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <h1 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>Finance tracker</h1>
-        <span style={{ background: "#10b981", color: "#fff", fontSize: "11px", fontWeight: 700, padding: "3px 10px", borderRadius: "9999px" }}>Live</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <span style={{ background: "#10b981", color: "#fff", fontSize: "11px", fontWeight: 700, padding: "3px 10px", borderRadius: "9999px" }}>Live</span>
+          {user && (
+            <span style={{ fontSize: "12px", color: "#666", maxWidth: "160px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {user.primaryEmailAddress?.emailAddress ?? user.fullName}
+            </span>
+          )}
+          <button
+            onClick={() => signOut({ redirectUrl: `${window.location.origin}${basePath || "/"}` })}
+            style={{ background: "none", border: "1px solid #333", borderRadius: "6px", color: "#888", cursor: "pointer", fontSize: "12px", padding: "5px 12px" }}
+          >
+            Sign out
+          </button>
+        </div>
       </div>
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 20px" }}>
