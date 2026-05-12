@@ -65,9 +65,9 @@ const { data: rawTransactions } = useGetTransactions({
   query: { queryKey: getGetTransactionsQueryKey(), refetchInterval: 5000 },
 });
 const transactions = Array.isArray(rawTransactions) ? rawTransactions : [];
-  const { data: stats } = useGetStats({
-    query: { queryKey: getGetStatsQueryKey(), refetchInterval: 5000 },
-  });
+const { data: stats } = useGetStats({
+  query: { queryKey: getGetStatsQueryKey(), refetchInterval: 5000 },
+});
 
   const createTx = useCreateTransaction();
   const deleteTx = useDeleteTransaction();
