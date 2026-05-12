@@ -61,9 +61,10 @@ export default function Dashboard() {
   const [category, setCategory] = useState("Housing");
   const [submitting, setSubmitting] = useState(false);
 
-  const { data: transactions = [] } = useGetTransactions({
-    query: { queryKey: getGetTransactionsQueryKey(), refetchInterval: 5000 },
-  });
+const { data: rawTransactions } = useGetTransactions({
+  query: { queryKey: getGetTransactionsQueryKey(), refetchInterval: 5000 },
+});
+const transactions = Array.isArray(rawTransactions) ? rawTransactions : [];
   const { data: stats } = useGetStats({
     query: { queryKey: getGetStatsQueryKey(), refetchInterval: 5000 },
   });
