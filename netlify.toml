@@ -33,5 +33,5 @@
   to = "/index.html"
   status = 200
 
-  [[plugins]]
+[[plugins]]
   package = "@netlify/plugin-functions-install-core"
