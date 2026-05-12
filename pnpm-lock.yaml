@@ -156,6 +156,10 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      pg:
+        specifier: ^8.20.0
+        version: 8.20.0
     devDependencies:
       prettier:
         specifier: ^3.8.1
