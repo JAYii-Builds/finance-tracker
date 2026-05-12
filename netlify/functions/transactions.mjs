@@ -22,7 +22,7 @@ async function getUserId(event) {
 
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 200, headers, body: "" };
+return { statusCode: 200, headers, body: JSON.stringify(result.rows || []) };
   }
   if (event.httpMethod !== "GET") {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
