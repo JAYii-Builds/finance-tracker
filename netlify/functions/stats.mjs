@@ -16,9 +16,7 @@ const headers = {
 async function getUserId(event) {
   const token = event.headers.authorization?.replace("Bearer ", "");
   if (!token) throw new Error("Unauthorized");
-  const payload = await verifyToken(token, {
-    secretKey: process.env.CLERK_SECRET_KEY,
-  });
+  const payload = await verifyToken(token, { secretKey: process.env.CLERK_SECRET_KEY });
   return payload.sub;
 }
 
@@ -43,11 +41,7 @@ export const handler = async (event) => {
       const { totalIncome, totalExpenses } = result.rows[0];
       const netBalance = totalIncome - totalExpenses;
       const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({ totalIncome, totalExpenses, netBalance, savingsRate }),
-      };
+      return { statusCode: 200, headers, body: JSON.stringify({ totalIncome, totalExpenses, netBalance, savingsRate }) };
     } finally {
       client.release();
     }
