@@ -6,20 +6,17 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Route /api/transactions/:id → transaction-by-id function (must come before the broader rule)
 [[redirects]]
   from = "/api/transactions/:id"
   to = "/.netlify/functions/transaction-by-id?id=:id"
   status = 200
   force = true
-  conditions = {Method = ["DELETE", "OPTIONS"]}
 
 [[redirects]]
   from = "/api/transactions"
   to = "/.netlify/functions/transactions"
   status = 200
   force = true
-  conditions = {Method = ["GET", "POST", "OPTIONS"]}
 
 [[redirects]]
   from = "/api/stats"
