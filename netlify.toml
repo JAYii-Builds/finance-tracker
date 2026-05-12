@@ -12,22 +12,21 @@
   to = "/.netlify/functions/transaction-by-id?id=:id"
   status = 200
   force = true
+  conditions = {Method = ["DELETE", "OPTIONS"]}
 
-# Route /api/transactions → transactions function
 [[redirects]]
   from = "/api/transactions"
   to = "/.netlify/functions/transactions"
   status = 200
   force = true
+  conditions = {Method = ["GET", "POST", "OPTIONS"]}
 
-# Route /api/stats → stats function
 [[redirects]]
   from = "/api/stats"
   to = "/.netlify/functions/stats"
   status = 200
   force = true
 
-# SPA fallback — all other routes serve index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
