@@ -3,7 +3,7 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: Finance Dashboard API
+  description: Finance Tracker API
 servers:
   - url: /api
     description: Base API path
@@ -12,17 +12,14 @@ tags:
     description: Health operations
   - name: transactions
     description: Transaction operations
-  - name: categories
-    description: Category operations
   - name: stats
-    description: Statistics and analytics
+    description: Statistics
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -35,27 +32,7 @@ paths:
     get:
       operationId: getTransactions
       tags: [transactions]
-      summary: List transactions
-      parameters:
-        - name: month
-          in: query
-          schema:
-            type: string
-          description: "Month filter in YYYY-MM format"
-        - name: category
-          in: query
-          schema:
-            type: string
-        - name: type
-          in: query
-          schema:
-            type: string
-            enum: [income, expense]
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            default: 50
+      summary: List all transactions
       responses:
         "200":
           description: List of transactions
@@ -68,7 +45,7 @@ paths:
     post:
       operationId: createTransaction
       tags: [transactions]
-      summary: Create a transaction
+      summary: Add a transaction
       requestBody:
         required: true
         content:
@@ -84,50 +61,6 @@ paths:
                 $ref: "#/components/schemas/Transaction"
 
   /transactions/{id}:
-    get:
-      operationId: getTransaction
-      tags: [transactions]
-      summary: Get a transaction
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Transaction
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Transaction"
-        "404":
-          description: Not found
-    patch:
-      operationId: updateTransaction
-      tags: [transactions]
-      summary: Update a transaction
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TransactionUpdate"
-      responses:
-        "200":
-          description: Updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Transaction"
-        "404":
-          description: Not found
     delete:
       operationId: deleteTransaction
       tags: [transactions]
@@ -144,98 +77,18 @@ paths:
         "404":
           description: Not found
 
-  /categories:
+  /stats:
     get:
-      operationId: getCategories
-      tags: [categories]
-      summary: List all categories
-      responses:
-        "200":
-          description: List of categories
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Category"
-    post:
-      operationId: createCategory
-      tags: [categories]
-      summary: Create a category
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CategoryInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Category"
-
-  /stats/monthly:
-    get:
-      operationId: getMonthlyStats
+      operationId: getStats
       tags: [stats]
-      summary: Get monthly income/expense stats for a full year
-      parameters:
-        - name: year
-          in: query
-          schema:
-            type: integer
-          description: "Year to get stats for (defaults to current year)"
+      summary: Get overall stats
       responses:
         "200":
-          description: Monthly stats
+          description: Stats
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/MonthlyStats"
-
-  /stats/summary:
-    get:
-      operationId: getMonthlySummary
-      tags: [stats]
-      summary: Get summary KPIs for a given month
-      parameters:
-        - name: month
-          in: query
-          schema:
-            type: string
-          description: "Month in YYYY-MM format (defaults to current month)"
-      responses:
-        "200":
-          description: Monthly summary
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MonthlySummary"
-
-  /stats/by-category:
-    get:
-      operationId: getStatsByCategory
-      tags: [stats]
-      summary: Get expense breakdown by category for a month
-      parameters:
-        - name: month
-          in: query
-          schema:
-            type: string
-          description: "Month in YYYY-MM format (defaults to current month)"
-      responses:
-        "200":
-          description: Spending by category
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CategoryStats"
+                $ref: "#/components/schemas/Stats"
 
 components:
   schemas:
@@ -249,135 +102,46 @@ components:
 
     Transaction:
       type: object
-      required: [id, date, amount, description, type, categoryId, categoryName, categoryColor, categoryIcon]
+      required: [id, description, amount, category, type, createdAt]
       properties:
         id:
           type: integer
-        date:
+        description:
           type: string
-          format: date
         amount:
           type: number
-        description:
+        category:
           type: string
         type:
           type: string
           enum: [income, expense]
-        categoryId:
-          type: integer
-        categoryName:
+        createdAt:
           type: string
-        categoryColor:
-          type: string
-        categoryIcon:
-          type: string
+          format: date-time
 
     TransactionInput:
       type: object
-      required: [date, amount, description, type, categoryId]
+      required: [description, amount, category, type]
       properties:
-        date:
+        description:
           type: string
-          format: date
         amount:
           type: number
-        description:
+        category:
           type: string
         type:
           type: string
           enum: [income, expense]
-        categoryId:
-          type: integer
 
-    TransactionUpdate:
+    Stats:
       type: object
+      required: [totalIncome, totalExpenses, netBalance, savingsRate]
       properties:
-        date:
-          type: string
-          format: date
-        amount:
-          type: number
-        description:
-          type: string
-        type:
-          type: string
-          enum: [income, expense]
-        categoryId:
-          type: integer
-
-    Category:
-      type: object
-      required: [id, name, color, icon, type]
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        color:
-          type: string
-        icon:
-          type: string
-        type:
-          type: string
-          enum: [income, expense, both]
-
-    CategoryInput:
-      type: object
-      required: [name, color, icon, type]
-      properties:
-        name:
-          type: string
-        color:
-          type: string
-        icon:
-          type: string
-        type:
-          type: string
-          enum: [income, expense, both]
-
-    MonthlyStats:
-      type: object
-      required: [month, income, expenses]
-      properties:
-        month:
-          type: string
-        income:
-          type: number
-        expenses:
-          type: number
-
-    MonthlySummary:
-      type: object
-      required: [month, totalIncome, totalExpenses, netSavings, savingsRate, prevMonthIncome, prevMonthExpenses]
-      properties:
-        month:
-          type: string
         totalIncome:
           type: number
         totalExpenses:
           type: number
-        netSavings:
+        netBalance:
           type: number
         savingsRate:
-          type: number
-        prevMonthIncome:
-          type: number
-        prevMonthExpenses:
-          type: number
-
-    CategoryStats:
-      type: object
-      required: [categoryId, categoryName, categoryColor, categoryIcon, total, percentage]
-      properties:
-        categoryId:
-          type: integer
-        categoryName:
-          type: string
-        categoryColor:
-          type: string
-        categoryIcon:
-          type: string
-        total:
-          type: number
-        percentage:
           type: number
