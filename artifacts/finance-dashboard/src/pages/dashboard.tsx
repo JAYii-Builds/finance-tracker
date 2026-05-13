@@ -39,10 +39,6 @@ const CATEGORY_COLORS: Record<string, string> = {
   Other: "#6366f1",
 };
 
-function fmt(n: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(n);
-}
-
 function timeSince(date: Date) {
   const diff = (Date.now() - date.getTime()) / 1000;
   if (diff < 60) return `${Math.floor(diff)}s ago`;
@@ -60,14 +56,20 @@ export default function Dashboard() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Housing");
   const [submitting, setSubmitting] = useState(false);
+  const [currency, setCurrency] = useState("₱");
+  const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
 
-const { data: rawTransactions } = useGetTransactions({
-  query: { queryKey: getGetTransactionsQueryKey(), refetchInterval: 5000 },
-});
-const transactions = Array.isArray(rawTransactions) ? rawTransactions : [];
-const { data: stats } = useGetStats({
-  query: { queryKey: getGetStatsQueryKey(), refetchInterval: 5000 },
-});
+  function fmt(n: number) {
+    return currency + new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+  }
+
+  const { data: rawTransactions } = useGetTransactions({
+    query: { queryKey: getGetTransactionsQueryKey(), refetchInterval: 5000 },
+  });
+  const transactions = Array.isArray(rawTransactions) ? rawTransactions : [];
+  const { data: stats } = useGetStats({
+    query: { queryKey: getGetStatsQueryKey(), refetchInterval: 5000 },
+  });
 
   const createTx = useCreateTransaction();
   const deleteTx = useDeleteTransaction();
@@ -93,7 +95,6 @@ const { data: stats } = useGetStats({
     await qc.invalidateQueries({ queryKey: getGetStatsQueryKey() });
   }
 
-  // Compute expense totals by category
   const expenseByCategory = useMemo(() => {
     const map: Record<string, number> = {};
     for (const t of transactions) {
@@ -104,7 +105,6 @@ const { data: stats } = useGetStats({
     return Object.entries(map).sort((a, b) => b[1] - a[1]);
   }, [transactions]);
 
-  // Income vs Expenses grouped by category for the bar chart
   const barChartData = useMemo(() => {
     const incomeMap: Record<string, number> = {};
     const expenseMap: Record<string, number> = {};
@@ -116,18 +116,8 @@ const { data: stats } = useGetStats({
     return {
       labels: cats,
       datasets: [
-        {
-          label: "Income",
-          data: cats.map(c => incomeMap[c] ?? 0),
-          backgroundColor: "#10b981",
-          borderRadius: 4,
-        },
-        {
-          label: "Expenses",
-          data: cats.map(c => expenseMap[c] ?? 0),
-          backgroundColor: "#f97316",
-          borderRadius: 4,
-        },
+        { label: "Income", data: cats.map(c => incomeMap[c] ?? 0), backgroundColor: "#10b981", borderRadius: 4 },
+        { label: "Expenses", data: cats.map(c => expenseMap[c] ?? 0), backgroundColor: "#f97316", borderRadius: 4 },
       ],
     };
   }, [transactions]);
@@ -144,7 +134,6 @@ const { data: stats } = useGetStats({
 
   const totalExpenses = stats?.totalExpenses ?? 0;
   const recent8 = transactions.slice(0, 8);
-
   const netBalance = stats?.netBalance ?? 0;
   const savingsRate = stats?.savingsRate ?? 0;
 
@@ -160,6 +149,20 @@ const { data: stats } = useGetStats({
               {user.primaryEmailAddress?.emailAddress ?? user.fullName}
             </span>
           )}
+          <select
+            value={currency}
+            onChange={e => setCurrency(e.target.value)}
+            style={{ background: "#111", border: "1px solid #333", borderRadius: "6px", padding: "4px 8px", color: "#e5e5e5", fontSize: "12px", outline: "none" }}
+          >
+            <option value="₱">₱ PHP</option>
+            <option value="$">$ USD</option>
+            <option value="€">€ EUR</option>
+            <option value="£">£ GBP</option>
+            <option value="¥">¥ JPY</option>
+            <option value="₩">₩ KRW</option>
+            <option value="A$">A$ AUD</option>
+            <option value="C$">C$ CAD</option>
+          </select>
           <button
             onClick={() => signOut({ redirectUrl: `${window.location.origin}${basePath || "/"}` })}
             style={{ background: "none", border: "1px solid #333", borderRadius: "6px", color: "#888", cursor: "pointer", fontSize: "12px", padding: "5px 12px" }}
@@ -172,145 +175,57 @@ const { data: stats } = useGetStats({
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 20px" }}>
         {/* KPI Cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "20px" }}>
-          <KpiCard
-            label="TOTAL INCOME"
-            value={fmt(stats?.totalIncome ?? 0)}
-            sub={`${transactions.filter(t => t.type === "income").length} entries`}
-            valueColor="#10b981"
-          />
-          <KpiCard
-            label="TOTAL EXPENSES"
-            value={fmt(totalExpenses)}
-            sub={`${transactions.filter(t => t.type === "expense").length} entries`}
-            valueColor="#ef4444"
-          />
-          <KpiCard
-            label="NET BALANCE"
-            value={fmt(netBalance)}
-            sub={netBalance >= 0 ? "surplus" : "deficit"}
-            valueColor={netBalance >= 0 ? "#10b981" : "#ef4444"}
-          />
-          <KpiCard
-            label="SAVINGS RATE"
-            value={stats ? `${savingsRate.toFixed(1)}%` : "—"}
-            sub="of income saved"
-            valueColor={savingsRate >= 20 ? "#10b981" : savingsRate > 0 ? "#f97316" : "#ef4444"}
-          />
+          <KpiCard label="TOTAL INCOME" value={fmt(stats?.totalIncome ?? 0)} sub={`${transactions.filter(t => t.type === "income").length} entries`} valueColor="#10b981" />
+          <KpiCard label="TOTAL EXPENSES" value={fmt(totalExpenses)} sub={`${transactions.filter(t => t.type === "expense").length} entries`} valueColor="#ef4444" />
+          <KpiCard label="NET BALANCE" value={fmt(netBalance)} sub={netBalance >= 0 ? "surplus" : "deficit"} valueColor={netBalance >= 0 ? "#10b981" : "#ef4444"} />
+          <KpiCard label="SAVINGS RATE" value={stats ? `${savingsRate.toFixed(1)}%` : "—"} sub="of income saved" valueColor={savingsRate >= 20 ? "#10b981" : savingsRate > 0 ? "#f97316" : "#ef4444"} />
         </div>
 
         {/* Add Transaction Form */}
         <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: "10px", padding: "16px 20px", marginBottom: "20px" }}>
           <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", color: "#888", marginBottom: "12px" }}>+ ADD TRANSACTION</div>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
-            <input
-              value={desc}
-              onChange={e => setDesc(e.target.value)}
-              placeholder="Description (e.g. Rent)"
-              style={{ flex: "1 1 160px", minWidth: "140px", background: "#111", border: "1px solid #333", borderRadius: "6px", padding: "8px 12px", color: "#e5e5e5", fontSize: "14px", outline: "none" }}
-            />
-            <input
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-              type="number"
-              min="0"
-              step="0.01"
-              placeholder="Amount ($)"
-              style={{ width: "130px", background: "#111", border: "1px solid #333", borderRadius: "6px", padding: "8px 12px", color: "#e5e5e5", fontSize: "14px", outline: "none" }}
-            />
-            <select
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-              style={{ background: "#111", border: "1px solid #333", borderRadius: "6px", padding: "8px 12px", color: "#e5e5e5", fontSize: "14px", outline: "none" }}
-            >
+            <input value={desc} onChange={e => setDesc(e.target.value)} placeholder="Description (e.g. Rent)" style={{ flex: "1 1 160px", minWidth: "140px", background: "#111", border: "1px solid #333", borderRadius: "6px", padding: "8px 12px", color: "#e5e5e5", fontSize: "14px", outline: "none" }} />
+            <input value={amount} onChange={e => setAmount(e.target.value)} type="number" min="0" step="0.01" placeholder={`Amount (${currency})`} style={{ width: "130px", background: "#111", border: "1px solid #333", borderRadius: "6px", padding: "8px 12px", color: "#e5e5e5", fontSize: "14px", outline: "none" }} />
+            <select value={category} onChange={e => setCategory(e.target.value)} style={{ background: "#111", border: "1px solid #333", borderRadius: "6px", padding: "8px 12px", color: "#e5e5e5", fontSize: "14px", outline: "none" }}>
               {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
-            <button
-              onClick={() => submit("income")}
-              disabled={submitting}
-              style={{ background: "#10b981", color: "#fff", border: "none", borderRadius: "6px", padding: "8px 18px", fontSize: "13px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px" }}
-            >
-              ↑ Income
-            </button>
-            <button
-              onClick={() => submit("expense")}
-              disabled={submitting}
-              style={{ background: "#ef4444", color: "#fff", border: "none", borderRadius: "6px", padding: "8px 18px", fontSize: "13px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px" }}
-            >
-              ↓ Expense
-            </button>
+            <button onClick={() => submit("income")} disabled={submitting} style={{ background: "#10b981", color: "#fff", border: "none", borderRadius: "6px", padding: "8px 18px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>↑ Income</button>
+            <button onClick={() => submit("expense")} disabled={submitting} style={{ background: "#ef4444", color: "#fff", border: "none", borderRadius: "6px", padding: "8px 18px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>↓ Expense</button>
           </div>
         </div>
 
         {/* Charts Row */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-          {/* Bar Chart */}
           <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: "10px", padding: "20px" }}>
             <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", color: "#888", marginBottom: "16px" }}>INCOME VS EXPENSES</div>
-            {transactions.length === 0 ? (
-              <EmptyState />
-            ) : (
+            {transactions.length === 0 ? <EmptyState /> : (
               <div style={{ height: "200px", position: "relative" }}>
-                <Bar
-                  data={barChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        position: "bottom",
-                        labels: { color: "#aaa", font: { size: 11 }, boxWidth: 12, padding: 12 },
-                      },
-                      tooltip: {
-                        callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}` },
-                        backgroundColor: "#1a1a1a",
-                        borderColor: "#333",
-                        borderWidth: 1,
-                        titleColor: "#e5e5e5",
-                        bodyColor: "#aaa",
-                      },
-                    },
-                    scales: {
-                      x: { grid: { color: "#1e1e1e" }, ticks: { color: "#666", font: { size: 11 } } },
-                      y: {
-                        grid: { color: "#1e1e1e" },
-                        ticks: { color: "#666", font: { size: 11 }, callback: v => `$${Number(v).toLocaleString()}` },
-                      },
-                    },
-                  }}
-                />
+                <Bar data={barChartData} options={{
+                  responsive: true, maintainAspectRatio: false,
+                  plugins: {
+                    legend: { position: "bottom", labels: { color: "#aaa", font: { size: 11 }, boxWidth: 12, padding: 12 } },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}` }, backgroundColor: "#1a1a1a", borderColor: "#333", borderWidth: 1, titleColor: "#e5e5e5", bodyColor: "#aaa" },
+                  },
+                  scales: {
+                    x: { grid: { color: "#1e1e1e" }, ticks: { color: "#666", font: { size: 11 } } },
+                    y: { grid: { color: "#1e1e1e" }, ticks: { color: "#666", font: { size: 11 }, callback: v => `${currency}${Number(v).toLocaleString()}` } },
+                  },
+                }} />
               </div>
             )}
           </div>
-
-          {/* Donut Chart */}
           <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: "10px", padding: "20px" }}>
             <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", color: "#888", marginBottom: "16px" }}>EXPENSE BREAKDOWN</div>
-            {expenseByCategory.length === 0 ? (
-              <EmptyState text="No expenses yet" />
-            ) : (
+            {expenseByCategory.length === 0 ? <EmptyState text="No expenses yet" /> : (
               <div style={{ height: "200px", position: "relative" }}>
-                <Doughnut
-                  data={donutData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: "65%",
-                    plugins: {
-                      legend: {
-                        position: "bottom",
-                        labels: { color: "#aaa", font: { size: 11 }, boxWidth: 12, padding: 10 },
-                      },
-                      tooltip: {
-                        callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` },
-                        backgroundColor: "#1a1a1a",
-                        borderColor: "#333",
-                        borderWidth: 1,
-                        titleColor: "#e5e5e5",
-                        bodyColor: "#aaa",
-                      },
-                    },
-                  }}
-                />
+                <Doughnut data={donutData} options={{
+                  responsive: true, maintainAspectRatio: false, cutout: "65%",
+                  plugins: {
+                    legend: { position: "bottom", labels: { color: "#aaa", font: { size: 11 }, boxWidth: 12, padding: 10 } },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` }, backgroundColor: "#1a1a1a", borderColor: "#333", borderWidth: 1, titleColor: "#e5e5e5", bodyColor: "#aaa" },
+                  },
+                }} />
               </div>
             )}
           </div>
@@ -318,7 +233,6 @@ const { data: stats } = useGetStats({
 
         {/* Bottom Row */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-          {/* Recent Transactions */}
           <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: "10px", padding: "20px" }}>
             <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", color: "#888", marginBottom: "16px" }}>RECENT TRANSACTIONS</div>
             {recent8.length === 0 ? (
@@ -335,13 +249,15 @@ const { data: stats } = useGetStats({
                       <span style={{ fontSize: "13px", fontWeight: 600, color: t.type === "income" ? "#10b981" : "#ef4444" }}>
                         {t.type === "income" ? "+" : "-"}{fmt(t.amount)}
                       </span>
-                      <button
-                        onClick={() => handleDelete(t.id)}
-                        style={{ background: "none", border: "none", color: "#444", cursor: "pointer", fontSize: "14px", lineHeight: 1, padding: "2px 4px" }}
-                        title="Delete"
-                      >
-                        ×
-                      </button>
+                      {confirmDelete === t.id ? (
+                        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                          <span style={{ fontSize: "11px", color: "#888" }}>Delete?</span>
+                          <button onClick={() => { handleDelete(t.id); setConfirmDelete(null); }} style={{ background: "#ef4444", border: "none", borderRadius: "4px", color: "#fff", cursor: "pointer", fontSize: "11px", padding: "2px 8px" }}>Yes</button>
+                          <button onClick={() => setConfirmDelete(null)} style={{ background: "#333", border: "none", borderRadius: "4px", color: "#ccc", cursor: "pointer", fontSize: "11px", padding: "2px 8px" }}>No</button>
+                        </div>
+                      ) : (
+                        <button onClick={() => setConfirmDelete(t.id)} style={{ background: "none", border: "none", color: "#444", cursor: "pointer", fontSize: "14px", lineHeight: 1, padding: "2px 4px" }} title="Delete">×</button>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -349,7 +265,6 @@ const { data: stats } = useGetStats({
             )}
           </div>
 
-          {/* Spending by Category */}
           <div style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: "10px", padding: "20px" }}>
             <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", color: "#888", marginBottom: "16px" }}>SPENDING BY CATEGORY</div>
             {expenseByCategory.length === 0 ? (
