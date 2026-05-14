@@ -6,11 +6,11 @@ import { Switch, Route, Redirect, useLocation, Router as WouterRouter, Link } fr
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import Dashboard from "@/pages/dashboard";
+import Terms from "@/pages/terms";
+import Privacy from "@/pages/privacy";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
-
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string;
-
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL || undefined;
 
 function stripBase(path: string): string {
@@ -91,6 +91,10 @@ function Landing() {
         <p style={{ marginTop: "40px", color: "#444", fontSize: "12px" }}>
           Email + password · Google · GitHub
         </p>
+        <div style={{ marginTop: "16px", display: "flex", gap: "16px", justifyContent: "center" }}>
+          <Link to="/terms" style={{ color: "#555", fontSize: "12px", textDecoration: "none" }}>Terms of Service</Link>
+          <Link to="/privacy" style={{ color: "#555", fontSize: "12px", textDecoration: "none" }}>Privacy Policy</Link>
+        </div>
       </div>
     </div>
   );
@@ -191,6 +195,8 @@ function AppRoutes() {
           <Route path="/dashboard" component={ProtectedDashboard} />
           <Route path="/sign-in/*?" component={SignInPage} />
           <Route path="/sign-up/*?" component={SignUpPage} />
+          <Route path="/terms" component={Terms} />
+          <Route path="/privacy" component={Privacy} />
           <Route>
             <Redirect to="/" />
           </Route>
