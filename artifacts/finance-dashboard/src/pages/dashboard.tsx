@@ -254,10 +254,10 @@ export default function Dashboard() {
             <option value="A$">A$ AUD</option><option value="C$">C$ CAD</option>
           </select>
           <button onClick={()=>setDark(d=>!d)} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"16px",padding:"4px 10px"}}>
-            {dark?"☀️":"🌙"}
+            {dark?"Light":"Dark"}
           </button>
           <button onClick={()=>setShowBudgets(b=>!b)} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"5px 12px"}}>
-            💰 Budgets
+            Limit Budgets
           </button>
           <button onClick={()=>signOut({redirectUrl:`${window.location.origin}${basePath||"/"}`})} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"5px 12px"}}>
             Sign out
