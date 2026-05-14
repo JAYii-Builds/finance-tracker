@@ -55,6 +55,22 @@ export default function Dashboard() {
   const muted = dark?"#888":"#666";
   const inp = {background:dark?"#111":"#f9f9f9",border:`1px solid ${dark?"#333":"#ddd"}`,borderRadius:"6px",padding:"8px 12px",color:text,fontSize:"14px",outline:"none"} as const;
 
+  // Welcome toast
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeVisible, setWelcomeVisible] = useState(false);
+
+  useEffect(()=>{
+    if(!user) return;
+    const key = `welcomed_${user.id}`;
+    if(!localStorage.getItem(key)){
+      localStorage.setItem(key,"true");
+      setShowWelcome(true);
+      setTimeout(()=>setWelcomeVisible(true),100);
+      setTimeout(()=>setWelcomeVisible(false),4000);
+      setTimeout(()=>setShowWelcome(false),4800);
+    }
+  },[user]);
+
   const [activeTab, setActiveTab] = useState<"dashboard"|"monthly"|"goals"|"converter">("dashboard");
   const [desc, setDesc] = useState(""); const [amount, setAmount] = useState(""); const [category, setCategory] = useState("Housing");
   const [submitting, setSubmitting] = useState(false); const [notes, setNotes] = useState(""); const [recurring, setRecurring] = useState(false);
@@ -73,17 +89,14 @@ export default function Dashboard() {
   const [editNotes, setEditNotes] = useState(""); const [editRecurring, setEditRecurring] = useState(false);
   const [editSubmitting, setEditSubmitting] = useState(false);
 
-  // Goals
   const [goals, setGoals] = useState<Goal[]>(()=>{
     try{return JSON.parse(localStorage.getItem("goals")||"[]");}catch{return [];}
   });
   const [goalName, setGoalName] = useState(""); const [goalTarget, setGoalTarget] = useState("");
   const [goalSaved, setGoalSaved] = useState(""); const [goalColor, setGoalColor] = useState(GOAL_COLORS[0]);
-  const [editGoalId, setEditGoalId] = useState<string|null>(null);
   const [addGoalSavedId, setAddGoalSavedId] = useState<string|null>(null);
   const [addSavedAmt, setAddSavedAmt] = useState("");
 
-  // Currency converter
   const [rates, setRates] = useState<Record<string,number>>({});
   const [convertFrom, setConvertFrom] = useState("PHP"); const [convertTo, setConvertTo] = useState("USD");
   const [convertAmt, setConvertAmt] = useState("");
@@ -139,7 +152,6 @@ export default function Dashboard() {
     datasets:[{data:expenseByCategory.map(([,v])=>v),backgroundColor:expenseByCategory.map(([c])=>CATEGORY_COLORS[c]??"#6366f1"),borderWidth:0,hoverOffset:4}],
   }),[expenseByCategory]);
 
-  // Monthly summary data — last 12 months
   const monthlyChartData=useMemo(()=>{
     const map:Record<string,{income:number;expenses:number}>={};
     for(const t of transactions){
@@ -233,11 +245,38 @@ export default function Dashboard() {
   });
 
   const tabs=[{id:"dashboard",label:"📊 Dashboard"},{id:"monthly",label:"📅 Monthly"},{id:"goals",label:"🎯 Goals"},{id:"converter",label:"💱 Converter"}] as const;
-
   const thisMonthSpent=(cat:string)=>transactions.filter(t=>t.type==="expense"&&t.category===cat&&new Date(t.createdAt).getMonth()===new Date().getMonth()&&new Date(t.createdAt).getFullYear()===new Date().getFullYear()).reduce((s,t)=>s+t.amount,0);
+
+  const userName = user?.firstName || user?.primaryEmailAddress?.emailAddress?.split("@")[0] || "there";
 
   return(
     <div style={{minHeight:"100vh",background:bg,color:text,fontFamily:"'Inter',sans-serif",transition:"background 0.2s"}}>
+
+      {/* Welcome Toast */}
+      {showWelcome&&(
+        <div style={{
+          position:"fixed",top:"24px",left:"50%",
+          transform:welcomeVisible?"translateX(-50%) translateY(0)":"translateX(-50%) translateY(-16px)",
+          zIndex:9999,pointerEvents:"none",
+          transition:"opacity 0.7s ease, transform 0.7s ease",
+          opacity:welcomeVisible?1:0,
+        }}>
+          <div style={{
+            background:"linear-gradient(135deg,#10b981,#059669)",
+            color:"#fff",borderRadius:"16px",padding:"18px 32px",
+            boxShadow:"0 8px 40px rgba(16,185,129,0.4)",
+            textAlign:"center",minWidth:"300px",
+          }}>
+            <div style={{fontSize:"26px",marginBottom:"6px"}}>👋</div>
+            <div style={{fontSize:"17px",fontWeight:700,marginBottom:"4px"}}>
+              Hello, {userName}!
+            </div>
+            <div style={{fontSize:"13px",opacity:0.9}}>
+              Welcome to Trackify — let's get your finances sorted 💸
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <div style={{borderBottom:`1px solid ${border}`,padding:"14px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"10px"}}>
@@ -295,14 +334,12 @@ export default function Dashboard() {
 
         {/* ── DASHBOARD TAB ── */}
         {activeTab==="dashboard"&&(<>
-          {/* Budget warnings */}
           {CATEGORIES.some(cat=>{const s=thisMonthSpent(cat);const st=getBudgetStatus(cat,s);return st==="over"||st==="warn";})&&(
             <div style={{background:dark?"#2a1a00":"#fff8e6",border:"1px solid #f59e0b",borderRadius:"8px",padding:"10px 16px",marginBottom:"16px",fontSize:"13px",color:"#f59e0b"}}>
               ⚠️ Budget alert: {CATEGORIES.filter(cat=>{const s=thisMonthSpent(cat);const st=getBudgetStatus(cat,s);return st==="over"||st==="warn";}).map(cat=>{const s=thisMonthSpent(cat);const st=getBudgetStatus(cat,s);return`${cat} ${st==="over"?"over budget":"near limit"}`;}).join(", ")}
             </div>
           )}
 
-          {/* Filters */}
           <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"14px 20px",marginBottom:"16px",display:"flex",gap:"10px",flexWrap:"wrap",alignItems:"center"}}>
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="🔍 Search..." style={{...inp,flex:"1 1 140px",minWidth:"120px"}}/>
             <select value={filterCat} onChange={e=>setFilterCat(e.target.value)} style={inp}>
@@ -321,7 +358,6 @@ export default function Dashboard() {
             {(search||filterCat!=="All"||filterMonth!=="All")&&<button onClick={()=>{setSearch("");setFilterCat("All");setFilterMonth(String(new Date().getMonth()));}} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"8px 10px"}}>✕</button>}
           </div>
 
-          {/* KPIs */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"12px",marginBottom:"20px"}}>
             <KpiCard label="TOTAL INCOME" value={fmt(filteredIncome)} sub={`${filtered.filter(t=>t.type==="income").length} entries`} valueColor="#10b981" surface={surface} border={border} muted={muted}/>
             <KpiCard label="TOTAL EXPENSES" value={fmt(filteredExpenses)} sub={`${filtered.filter(t=>t.type==="expense").length} entries`} valueColor="#ef4444" surface={surface} border={border} muted={muted}/>
@@ -329,7 +365,6 @@ export default function Dashboard() {
             <KpiCard label="SAVINGS RATE" value={filteredIncome>0?`${filteredRate.toFixed(1)}%`:"—"} sub="of income saved" valueColor={filteredRate>=20?"#10b981":filteredRate>0?"#f97316":"#ef4444"} surface={surface} border={border} muted={muted}/>
           </div>
 
-          {/* Add Transaction */}
           <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"16px 20px",marginBottom:"20px"}}>
             <div style={{fontSize:"11px",fontWeight:700,letterSpacing:"0.08em",color:muted,marginBottom:"12px"}}>+ ADD TRANSACTION</div>
             <div style={{display:"flex",gap:"10px",flexWrap:"wrap",alignItems:"center",marginBottom:"10px"}}>
@@ -347,7 +382,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Charts */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px",marginBottom:"16px"}}>
             <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"20px"}}>
               <div style={{fontSize:"11px",fontWeight:700,letterSpacing:"0.08em",color:muted,marginBottom:"16px"}}>INCOME VS EXPENSES</div>
@@ -359,7 +393,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Bottom Row */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px"}}>
             <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"20px"}}>
               <div style={{fontSize:"11px",fontWeight:700,letterSpacing:"0.08em",color:muted,marginBottom:"16px"}}>RECENT TRANSACTIONS {filtered.length>0&&<span style={{fontWeight:400}}>({filtered.length})</span>}</div>
@@ -512,11 +545,8 @@ export default function Dashboard() {
               <button onClick={addGoal} style={{background:"#10b981",color:"#fff",border:"none",borderRadius:"6px",padding:"8px 20px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Add goal</button>
             </div>
           </div>
-
           {goals.length===0?(
-            <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"60px 20px",textAlign:"center",color:muted}}>
-              No goals yet — add your first savings goal above!
-            </div>
+            <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"60px 20px",textAlign:"center",color:muted}}>No goals yet — add your first savings goal above!</div>
           ):(
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:"16px"}}>
               {goals.map(g=>{
@@ -556,7 +586,6 @@ export default function Dashboard() {
               })}
             </div>
           )}
-
           {goals.length>0&&(
             <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"20px",marginTop:"16px"}}>
               <div style={{fontSize:"11px",fontWeight:700,letterSpacing:"0.08em",color:muted,marginBottom:"16px"}}>GOALS OVERVIEW</div>
@@ -611,14 +640,12 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-
-          {/* Quick conversion table */}
           {Object.keys(rates).length>0&&(
             <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"20px"}}>
               <div style={{fontSize:"11px",fontWeight:700,letterSpacing:"0.08em",color:muted,marginBottom:"16px"}}>QUICK REFERENCE — 1 {convertFrom} IN OTHER CURRENCIES</div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:"10px"}}>
                 {ALL_CURRENCIES.filter(c=>c!==convertFrom).map(c=>(
-                  <div key={c} style={{background:dark?"#111":"#f9f9f9",border:`1px solid ${border}`,borderRadius:"8px",padding:"12px",cursor:"pointer"}} onClick={()=>{setConvertTo(c);}}>
+                  <div key={c} style={{background:dark?"#111":"#f9f9f9",border:`1px solid ${border}`,borderRadius:"8px",padding:"12px",cursor:"pointer"}} onClick={()=>setConvertTo(c)}>
                     <div style={{fontSize:"11px",color:muted,marginBottom:"4px"}}>{CURRENCY_SYMBOLS[c]} {c}</div>
                     <div style={{fontSize:"16px",fontWeight:600,color:text,fontVariantNumeric:"tabular-nums"}}>{(rates[c]/rates[convertFrom]).toFixed(4)}</div>
                   </div>
