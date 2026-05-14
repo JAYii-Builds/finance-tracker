@@ -243,7 +243,7 @@ export default function Dashboard() {
       <div style={{borderBottom:`1px solid ${border}`,padding:"14px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"10px"}}>
         <h1 style={{fontSize:"20px",fontWeight:700,margin:0}}>Finance tracker</h1>
         <div style={{display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap"}}>
-          <span style={{background:"#10b981",color:"#fff",fontSize:"11px",fontWeight:700,padding:"3px 10px",borderRadius:"9999px"}}>Live</span>
+          <span style={{background:"#10b981",color:"#fff",fontSize:"11px",fontWeight:700,padding:"3px 10px",borderRadius:"9999px"}}>JAYii's Build</span>
           {user&&<span style={{fontSize:"12px",color:muted,maxWidth:"160px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user.primaryEmailAddress?.emailAddress??user.fullName}</span>}
           <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...inp,padding:"4px 8px",fontSize:"12px"}}>
             <option value="₱">₱ PHP</option><option value="$">$ USD</option><option value="€">€ EUR</option>
@@ -251,7 +251,7 @@ export default function Dashboard() {
             <option value="A$">A$ AUD</option><option value="C$">C$ CAD</option>
           </select>
           <button onClick={()=>setDark(d=>!d)} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"14px",padding:"4px 10px"}}>{dark?"☀️ Light":"🌙 Dark"}</button>
-          <button onClick={()=>setShowBudgets(b=>!b)} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"5px 12px"}}>💰 Budgets</button>
+          <button onClick={()=>setShowBudgets(b=>!b)} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"5px 12px"}}>Limit Budgets</button>
           <button onClick={()=>signOut({redirectUrl:`${window.location.origin}${basePath||"/"}`})} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"5px 12px"}}>Sign out</button>
         </div>
       </div>
