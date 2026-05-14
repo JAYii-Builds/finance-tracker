@@ -30,7 +30,7 @@ export const handler = async (event) => {
     try {
       if (event.httpMethod === "GET") {
         const result = await client.query(
-          `SELECT id, description, amount::float, category, type, created_at AS "createdAt"
+          `SELECT id, description, amount::float, category, type, notes, recurring, created_at AS "createdAt"
            FROM transactions WHERE user_id = $1 ORDER BY created_at DESC`,
           [userId]
         );
@@ -38,15 +38,15 @@ export const handler = async (event) => {
       }
       if (event.httpMethod === "POST") {
         const body = JSON.parse(event.body || "{}");
-        const { description, amount, category, type } = body;
+        const { description, amount, category, type, notes, recurring } = body;
         if (!description || amount == null || !category || !type) {
           return { statusCode: 400, headers, body: JSON.stringify({ error: "Missing fields" }) };
         }
         const result = await client.query(
-          `INSERT INTO transactions (description, amount, category, type, user_id)
-           VALUES ($1, $2, $3, $4, $5)
-           RETURNING id, description, amount::float, category, type, created_at AS "createdAt"`,
-          [description, amount, category, type, userId]
+          `INSERT INTO transactions (description, amount, category, type, user_id, notes, recurring)
+           VALUES ($1, $2, $3, $4, $5, $6, $7)
+           RETURNING id, description, amount::float, category, type, notes, recurring, created_at AS "createdAt"`,
+          [description, amount, category, type, userId, notes || "", recurring || false]
         );
         return { statusCode: 201, headers, body: JSON.stringify(result.rows[0]) };
       }
