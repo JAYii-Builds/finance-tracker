@@ -24,6 +24,8 @@ const CURRENCY_SYMBOLS: Record<string,string> = {
   PHP:"₱",USD:"$",EUR:"€",GBP:"£",JPY:"¥",KRW:"₩",AUD:"A$",CAD:"C$",SGD:"S$",HKD:"HK$",CNY:"¥",INR:"₹",
 };
 const ALL_CURRENCIES = ["PHP","USD","EUR","GBP","JPY","KRW","AUD","CAD","SGD","HKD","CNY","INR"];
+const DATE_FORMATS = ["MM/DD/YYYY","DD/MM/YYYY","YYYY-MM-DD"] as const;
+type DateFormat = typeof DATE_FORMATS[number];
 
 type Transaction = {
   id:number; description:string; amount:number; category:string;
@@ -39,7 +41,24 @@ function timeSince(date:Date) {
   return `${Math.floor(diff/86400)}d ago`;
 }
 
+function formatDate(date:Date, fmt:DateFormat):string {
+  const mm = String(date.getMonth()+1).padStart(2,"0");
+  const dd = String(date.getDate()).padStart(2,"0");
+  const yyyy = date.getFullYear();
+  if(fmt==="MM/DD/YYYY") return `${mm}/${dd}/${yyyy}`;
+  if(fmt==="DD/MM/YYYY") return `${dd}/${mm}/${yyyy}`;
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 const GOAL_COLORS = ["#10b981","#3b82f6","#f97316","#8b5cf6","#ec4899","#f59e0b","#14b8a6","#6366f1"];
+
+// Load a setting from localStorage with a fallback
+function loadSetting<T>(key:string, fallback:T): T {
+  try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : fallback; } catch { return fallback; }
+}
+function saveSetting(key:string, value:unknown) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
 
 export default function Dashboard() {
   const qc = useQueryClient();
@@ -47,7 +66,20 @@ export default function Dashboard() {
   const { signOut } = useClerk();
   const basePath = import.meta.env.BASE_URL.replace(/\/$/,"");
 
-  const [dark, setDark] = useState(true);
+  // ── Persisted preferences ──
+  const [dark, setDark] = useState<boolean>(() => loadSetting("pref_dark", true));
+  const [currency, setCurrency] = useState<string>(() => loadSetting("pref_currency", "₱"));
+  const [budgetAlertThreshold, setBudgetAlertThreshold] = useState<number>(() => loadSetting("pref_budget_threshold", 80));
+  const [defaultTab, setDefaultTab] = useState<string>(() => loadSetting("pref_default_tab", "dashboard"));
+  const [dateFormat, setDateFormat] = useState<DateFormat>(() => loadSetting("pref_date_format", "MM/DD/YYYY"));
+
+  // Persist whenever they change
+  useEffect(() => saveSetting("pref_dark", dark), [dark]);
+  useEffect(() => saveSetting("pref_currency", currency), [currency]);
+  useEffect(() => saveSetting("pref_budget_threshold", budgetAlertThreshold), [budgetAlertThreshold]);
+  useEffect(() => saveSetting("pref_default_tab", defaultTab), [defaultTab]);
+  useEffect(() => saveSetting("pref_date_format", dateFormat), [dateFormat]);
+
   const bg = dark?"#0f0f0f":"#f5f5f5";
   const surface = dark?"#1a1a1a":"#ffffff";
   const border = dark?"#2a2a2a":"#e5e5e5";
@@ -58,7 +90,6 @@ export default function Dashboard() {
   // Welcome toast
   const [showWelcome, setShowWelcome] = useState(false);
   const [welcomeVisible, setWelcomeVisible] = useState(false);
-
   useEffect(()=>{
     if(!user) return;
     const key = `welcomed_${user.id}`;
@@ -71,10 +102,11 @@ export default function Dashboard() {
     }
   },[user]);
 
-  const [activeTab, setActiveTab] = useState<"dashboard"|"monthly"|"goals"|"converter">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard"|"monthly"|"goals"|"converter"|"settings">(
+    () => loadSetting("pref_default_tab","dashboard") as any
+  );
   const [desc, setDesc] = useState(""); const [amount, setAmount] = useState(""); const [category, setCategory] = useState("Housing");
   const [submitting, setSubmitting] = useState(false); const [notes, setNotes] = useState(""); const [recurring, setRecurring] = useState(false);
-  const [currency, setCurrency] = useState("₱");
   const [confirmDelete, setConfirmDelete] = useState<number|null>(null);
   const [search, setSearch] = useState(""); const [filterCat, setFilterCat] = useState("All");
   const [filterMonth, setFilterMonth] = useState(String(new Date().getMonth()));
@@ -88,7 +120,6 @@ export default function Dashboard() {
   const [editType, setEditType] = useState<"income"|"expense">("expense");
   const [editNotes, setEditNotes] = useState(""); const [editRecurring, setEditRecurring] = useState(false);
   const [editSubmitting, setEditSubmitting] = useState(false);
-
   const [goals, setGoals] = useState<Goal[]>(()=>{
     try{return JSON.parse(localStorage.getItem("goals")||"[]");}catch{return [];}
   });
@@ -96,11 +127,15 @@ export default function Dashboard() {
   const [goalSaved, setGoalSaved] = useState(""); const [goalColor, setGoalColor] = useState(GOAL_COLORS[0]);
   const [addGoalSavedId, setAddGoalSavedId] = useState<string|null>(null);
   const [addSavedAmt, setAddSavedAmt] = useState("");
-
   const [rates, setRates] = useState<Record<string,number>>({});
   const [convertFrom, setConvertFrom] = useState("PHP"); const [convertTo, setConvertTo] = useState("USD");
   const [convertAmt, setConvertAmt] = useState("");
   const [ratesLoading, setRatesLoading] = useState(false);
+
+  // Settings tab local state (for staged edits before save)
+  const [settingsSaved, setSettingsSaved] = useState(false);
+  const [dangerConfirm, setDangerConfirm] = useState<"transactions"|"goals"|null>(null);
+  const [exportFormat, setExportFormat] = useState<"csv"|"json">("csv");
 
   useEffect(()=>{
     setRatesLoading(true);
@@ -199,7 +234,6 @@ export default function Dashboard() {
   }
 
   function startEdit(t:Transaction){setEditId(t.id);setEditDesc(t.description);setEditAmount(String(t.amount));setEditCategory(t.category);setEditType(t.type);setEditNotes(t.notes||"");setEditRecurring(t.recurring||false);}
-
   async function saveEdit(){
     const amt=parseFloat(editAmount);
     if(!editDesc.trim()||isNaN(amt)||amt<=0||editId===null)return;
@@ -214,7 +248,14 @@ export default function Dashboard() {
   }
 
   function saveBudget(cat:string,val:string){const u={...budgets,[cat]:parseFloat(val)||0};setBudgets(u);localStorage.setItem("budgets",JSON.stringify(u));}
-  function getBudgetStatus(cat:string,spent:number){const l=budgets[cat];if(!l||l<=0)return null;const p=spent/l*100;if(p>=100)return"over";if(p>=80)return"warn";return"ok";}
+  function getBudgetStatus(cat:string,spent:number){
+    const l=budgets[cat];
+    if(!l||l<=0)return null;
+    const p=spent/l*100;
+    if(p>=100)return"over";
+    if(p>=budgetAlertThreshold)return"warn";
+    return"ok";
+  }
 
   function saveGoals(g:Goal[]){setGoals(g);localStorage.setItem("goals",JSON.stringify(g));}
   function addGoal(){
@@ -231,11 +272,37 @@ export default function Dashboard() {
     setAddGoalSavedId(null);setAddSavedAmt("");
   }
 
-  function exportCSV(){
-    const rows=[["ID","Description","Amount","Category","Type","Notes","Recurring","Date"],...filtered.map(t=>[t.id,`"${t.description.replace(/"/g,'""')}"`,t.amount,t.category,t.type,`"${(t.notes||"").replace(/"/g,'""')}"`,t.recurring?"Yes":"No",new Date(t.createdAt).toLocaleDateString()])];
+  // ── Export functions ──
+  function exportCSV(all=false){
+    const source = all ? transactions : filtered;
+    const rows=[["ID","Description","Amount","Category","Type","Notes","Recurring","Date"],...source.map(t=>[
+      t.id,`"${t.description.replace(/"/g,'""')}"`,t.amount,t.category,t.type,
+      `"${(t.notes||"").replace(/"/g,'""')}"`,t.recurring?"Yes":"No",
+      formatDate(new Date(t.createdAt), dateFormat)
+    ])];
     const csv=rows.map(r=>r.join(",")).join("\n");
     const blob=new Blob([csv],{type:"text/csv"});const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");a.href=url;a.download=`transactions-${filterYear}-${filterMonth==="All"?"all":MONTHS[parseInt(filterMonth)]}.csv`;a.click();URL.revokeObjectURL(url);
+    const a=document.createElement("a");a.href=url;
+    a.download=all?`all-transactions.csv`:`transactions-${filterYear}-${filterMonth==="All"?"all":MONTHS[parseInt(filterMonth)]}.csv`;
+    a.click();URL.revokeObjectURL(url);
+  }
+
+  function exportJSON(){
+    const blob=new Blob([JSON.stringify(transactions,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download="all-transactions.json";a.click();URL.revokeObjectURL(url);
+  }
+
+  async function clearAllTransactions(){
+    for(const t of transactions){ try{ await deleteTx.mutateAsync({id:t.id}); }catch{} }
+    await qc.invalidateQueries({queryKey:getGetTransactionsQueryKey()});
+    await qc.invalidateQueries({queryKey:getGetStatsQueryKey()});
+    setDangerConfirm(null);
+  }
+
+  function clearAllGoals(){
+    saveGoals([]);
+    setDangerConfirm(null);
   }
 
   const chartOpts=(yPrefix:string)=>({
@@ -244,14 +311,19 @@ export default function Dashboard() {
     scales:{x:{grid:{color:dark?"#1e1e1e":"#eee"},ticks:{color:dark?"#666":"#999",font:{size:11}}},y:{grid:{color:dark?"#1e1e1e":"#eee"},ticks:{color:dark?"#666":"#999",font:{size:11},callback:(v:any)=>`${yPrefix}${Number(v).toLocaleString()}`}}},
   });
 
-  const tabs=[{id:"dashboard",label:"📊 Dashboard"},{id:"monthly",label:"📅 Monthly"},{id:"goals",label:"🎯 Goals"},{id:"converter",label:"💱 Converter"}] as const;
-  const thisMonthSpent=(cat:string)=>transactions.filter(t=>t.type==="expense"&&t.category===cat&&new Date(t.createdAt).getMonth()===new Date().getMonth()&&new Date(t.createdAt).getFullYear()===new Date().getFullYear()).reduce((s,t)=>s+t.amount,0);
+  const tabs=[
+    {id:"dashboard",label:"📊 Dashboard"},
+    {id:"monthly",label:"📅 Monthly"},
+    {id:"goals",label:"🎯 Goals"},
+    {id:"converter",label:"💱 Converter"},
+    {id:"settings",label:"⚙️ Settings"},
+  ] as const;
 
+  const thisMonthSpent=(cat:string)=>transactions.filter(t=>t.type==="expense"&&t.category===cat&&new Date(t.createdAt).getMonth()===new Date().getMonth()&&new Date(t.createdAt).getFullYear()===new Date().getFullYear()).reduce((s,t)=>s+t.amount,0);
   const userName = user?.firstName || user?.primaryEmailAddress?.emailAddress?.split("@")[0] || "there";
 
   return(
     <div style={{minHeight:"100vh",background:bg,color:text,fontFamily:"'Inter',sans-serif",transition:"background 0.2s"}}>
-
       {/* Welcome Toast */}
       {showWelcome&&(
         <div style={{
@@ -268,12 +340,8 @@ export default function Dashboard() {
             textAlign:"center",minWidth:"300px",
           }}>
             <div style={{fontSize:"26px",marginBottom:"6px"}}>👋</div>
-            <div style={{fontSize:"17px",fontWeight:700,marginBottom:"4px"}}>
-              Hello, {userName}!
-            </div>
-            <div style={{fontSize:"13px",opacity:0.9}}>
-              Welcome to Trackify — let's get your finances sorted 💸
-            </div>
+            <div style={{fontSize:"17px",fontWeight:700,marginBottom:"4px"}}>Hello, {userName}!</div>
+            <div style={{fontSize:"13px",opacity:0.9}}>Welcome to Trackify — let's get your finances sorted 💸</div>
           </div>
         </div>
       )}
@@ -354,7 +422,7 @@ export default function Dashboard() {
               <option value="All">All years</option>
               {availableYears.map(y=><option key={y} value={y}>{y}</option>)}
             </select>
-            <button onClick={exportCSV} style={{background:surface,border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"8px 14px",whiteSpace:"nowrap"}}>⬇ CSV</button>
+            <button onClick={()=>exportCSV(false)} style={{background:surface,border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"8px 14px",whiteSpace:"nowrap"}}>⬇ CSV</button>
             {(search||filterCat!=="All"||filterMonth!=="All")&&<button onClick={()=>{setSearch("");setFilterCat("All");setFilterMonth(String(new Date().getMonth()));}} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,cursor:"pointer",fontSize:"12px",padding:"8px 10px"}}>✕</button>}
           </div>
 
@@ -445,6 +513,7 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
+
             <div style={{background:surface,border:`1px solid ${border}`,borderRadius:"10px",padding:"20px"}}>
               <div style={{fontSize:"11px",fontWeight:700,letterSpacing:"0.08em",color:muted,marginBottom:"16px"}}>SPENDING BY CATEGORY</div>
               {expenseByCategory.length===0?<p style={{color:muted,fontSize:"14px",textAlign:"center",padding:"24px 0"}}>No expenses yet</p>:(
@@ -655,7 +724,153 @@ export default function Dashboard() {
           )}
         </>)}
 
+        {/* ── SETTINGS TAB ── */}
+        {activeTab==="settings"&&(<>
+
+          {/* Preferences */}
+          <SettingsSection title="PREFERENCES" surface={surface} border={border} muted={muted}>
+            <SettingsRow label="Default currency" desc="Currency shown across the app" dark={dark} border={border} muted={muted} text={text}>
+              <select value={currency} onChange={e=>setCurrency(e.target.value)} style={{...inp,fontSize:"13px",padding:"6px 10px"}}>
+                <option value="₱">₱ PHP</option><option value="$">$ USD</option><option value="€">€ EUR</option>
+                <option value="£">£ GBP</option><option value="¥">¥ JPY</option><option value="₩">₩ KRW</option>
+                <option value="A$">A$ AUD</option><option value="C$">C$ CAD</option>
+              </select>
+            </SettingsRow>
+
+            <SettingsRow label="Theme" desc="Light or dark mode" dark={dark} border={border} muted={muted} text={text}>
+              <div style={{display:"flex",gap:"8px"}}>
+                <button onClick={()=>setDark(false)} style={{background:!dark?"#10b981":"none",color:!dark?"#fff":muted,border:`1px solid ${!dark?"#10b981":border}`,borderRadius:"6px",padding:"6px 14px",fontSize:"13px",cursor:"pointer",fontWeight:!dark?600:400}}>☀️ Light</button>
+                <button onClick={()=>setDark(true)} style={{background:dark?"#10b981":"none",color:dark?"#fff":muted,border:`1px solid ${dark?"#10b981":border}`,borderRadius:"6px",padding:"6px 14px",fontSize:"13px",cursor:"pointer",fontWeight:dark?600:400}}>🌙 Dark</button>
+              </div>
+            </SettingsRow>
+
+            <SettingsRow label="Default tab on login" desc="Which tab opens when you sign in" dark={dark} border={border} muted={muted} text={text}>
+              <select
+                value={defaultTab}
+                onChange={e=>{ setDefaultTab(e.target.value); saveSetting("pref_default_tab", e.target.value); }}
+                style={{...inp,fontSize:"13px",padding:"6px 10px"}}
+              >
+                <option value="dashboard">📊 Dashboard</option>
+                <option value="monthly">📅 Monthly</option>
+                <option value="goals">🎯 Goals</option>
+                <option value="converter">💱 Converter</option>
+              </select>
+            </SettingsRow>
+
+            <SettingsRow label="Date format" desc="How dates appear in exports and lists" dark={dark} border={border} muted={muted} text={text}>
+              <select value={dateFormat} onChange={e=>setDateFormat(e.target.value as DateFormat)} style={{...inp,fontSize:"13px",padding:"6px 10px"}}>
+                {DATE_FORMATS.map(f=><option key={f} value={f}>{f}</option>)}
+              </select>
+            </SettingsRow>
+
+            <SettingsRow label="Budget alert threshold" desc={`Warn when spending reaches this % of your limit (currently ${budgetAlertThreshold}%)`} dark={dark} border={border} muted={muted} text={text}>
+              <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                <input
+                  type="range" min="50" max="95" step="5"
+                  value={budgetAlertThreshold}
+                  onChange={e=>setBudgetAlertThreshold(Number(e.target.value))}
+                  style={{accentColor:"#10b981",width:"140px",cursor:"pointer"}}
+                />
+                <span style={{fontSize:"14px",fontWeight:600,color:"#10b981",minWidth:"40px"}}>{budgetAlertThreshold}%</span>
+              </div>
+            </SettingsRow>
+          </SettingsSection>
+
+          {/* Account info */}
+          <SettingsSection title="ACCOUNT" surface={surface} border={border} muted={muted}>
+            <SettingsRow label="Email" desc="Your sign-in email address" dark={dark} border={border} muted={muted} text={text}>
+              <span style={{fontSize:"13px",color:muted}}>{user?.primaryEmailAddress?.emailAddress ?? "—"}</span>
+            </SettingsRow>
+            <SettingsRow label="Name" desc="Your display name from Clerk" dark={dark} border={border} muted={muted} text={text}>
+              <span style={{fontSize:"13px",color:muted}}>{user?.fullName ?? user?.firstName ?? "—"}</span>
+            </SettingsRow>
+            <SettingsRow label="User ID" desc="Your unique account identifier" dark={dark} border={border} muted={muted} text={text}>
+              <span style={{fontSize:"12px",color:muted,fontFamily:"monospace"}}>{user?.id ?? "—"}</span>
+            </SettingsRow>
+          </SettingsSection>
+
+          {/* Data export */}
+          <SettingsSection title="DATA EXPORT" surface={surface} border={border} muted={muted}>
+            <SettingsRow label="Export format" desc="Choose CSV for spreadsheets, JSON for raw data" dark={dark} border={border} muted={muted} text={text}>
+              <div style={{display:"flex",gap:"8px"}}>
+                <button onClick={()=>setExportFormat("csv")} style={{background:exportFormat==="csv"?"#10b981":"none",color:exportFormat==="csv"?"#fff":muted,border:`1px solid ${exportFormat==="csv"?"#10b981":border}`,borderRadius:"6px",padding:"6px 14px",fontSize:"13px",cursor:"pointer",fontWeight:exportFormat==="csv"?600:400}}>CSV</button>
+                <button onClick={()=>setExportFormat("json")} style={{background:exportFormat==="json"?"#10b981":"none",color:exportFormat==="json"?"#fff":muted,border:`1px solid ${exportFormat==="json"?"#10b981":border}`,borderRadius:"6px",padding:"6px 14px",fontSize:"13px",cursor:"pointer",fontWeight:exportFormat==="json"?600:400}}>JSON</button>
+              </div>
+            </SettingsRow>
+            <SettingsRow label="Export all transactions" desc={`Download all ${transactions.length} transaction${transactions.length!==1?"s":""} as ${exportFormat.toUpperCase()}`} dark={dark} border={border} muted={muted} text={text}>
+              <button
+                onClick={()=>exportFormat==="csv"?exportCSV(true):exportJSON()}
+                disabled={transactions.length===0}
+                style={{background:"#10b981",color:"#fff",border:"none",borderRadius:"6px",padding:"7px 16px",fontSize:"13px",fontWeight:600,cursor:transactions.length===0?"not-allowed":"pointer",opacity:transactions.length===0?0.5:1}}
+              >
+                ⬇ Export {exportFormat.toUpperCase()}
+              </button>
+            </SettingsRow>
+          </SettingsSection>
+
+          {/* Danger zone */}
+          <SettingsSection title="DANGER ZONE" surface={surface} border={`1px solid #ef4444`} muted={muted} titleColor="#ef4444">
+            <SettingsRow label="Clear all transactions" desc="Permanently delete every transaction from the database. This cannot be undone." dark={dark} border={border} muted={muted} text={text}>
+              {dangerConfirm==="transactions"?(
+                <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+                  <span style={{fontSize:"12px",color:"#ef4444"}}>Are you sure?</span>
+                  <button onClick={clearAllTransactions} style={{background:"#ef4444",color:"#fff",border:"none",borderRadius:"6px",padding:"6px 14px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Yes, delete all</button>
+                  <button onClick={()=>setDangerConfirm(null)} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,padding:"6px 12px",fontSize:"13px",cursor:"pointer"}}>Cancel</button>
+                </div>
+              ):(
+                <button onClick={()=>setDangerConfirm("transactions")} style={{background:"none",border:"1px solid #ef4444",borderRadius:"6px",color:"#ef4444",padding:"7px 16px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>
+                  🗑 Clear transactions
+                </button>
+              )}
+            </SettingsRow>
+            <SettingsRow label="Clear all goals" desc="Permanently delete all savings goals stored locally." dark={dark} border={border} muted={muted} text={text}>
+              {dangerConfirm==="goals"?(
+                <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+                  <span style={{fontSize:"12px",color:"#ef4444"}}>Are you sure?</span>
+                  <button onClick={clearAllGoals} style={{background:"#ef4444",color:"#fff",border:"none",borderRadius:"6px",padding:"6px 14px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Yes, delete all</button>
+                  <button onClick={()=>setDangerConfirm(null)} style={{background:"none",border:`1px solid ${border}`,borderRadius:"6px",color:muted,padding:"6px 12px",fontSize:"13px",cursor:"pointer"}}>Cancel</button>
+                </div>
+              ):(
+                <button onClick={()=>setDangerConfirm("goals")} style={{background:"none",border:"1px solid #ef4444",borderRadius:"6px",color:"#ef4444",padding:"7px 16px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>
+                  🗑 Clear goals
+                </button>
+              )}
+            </SettingsRow>
+          </SettingsSection>
+
+          {settingsSaved&&(
+            <div style={{position:"fixed",bottom:"24px",right:"24px",background:"#10b981",color:"#fff",borderRadius:"10px",padding:"12px 20px",fontSize:"13px",fontWeight:600,boxShadow:"0 4px 20px rgba(16,185,129,0.4)",zIndex:9999}}>
+              ✓ Settings saved
+            </div>
+          )}
+        </>)}
+
       </div>
+    </div>
+  );
+}
+
+// ── Settings helper components ──
+
+function SettingsSection({title,children,surface,border,muted,titleColor}:{title:string;children:React.ReactNode;surface:string;border:string;muted:string;titleColor?:string}) {
+  return(
+    <div style={{background:surface,border,borderRadius:"10px",overflow:"hidden",marginBottom:"16px"}}>
+      <div style={{padding:"12px 20px",borderBottom:`1px solid ${border}`}}>
+        <span style={{fontSize:"11px",fontWeight:700,letterSpacing:"0.08em",color:titleColor||muted}}>{title}</span>
+      </div>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+function SettingsRow({label,desc,children,dark,border,muted,text}:{label:string;desc:string;children:React.ReactNode;dark:boolean;border:string;muted:string;text:string}) {
+  return(
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"14px 20px",borderBottom:`1px solid ${border}`,gap:"16px",flexWrap:"wrap"}}>
+      <div>
+        <div style={{fontSize:"13px",fontWeight:500,color:text,marginBottom:"2px"}}>{label}</div>
+        <div style={{fontSize:"12px",color:muted}}>{desc}</div>
+      </div>
+      <div style={{flexShrink:0}}>{children}</div>
     </div>
   );
 }
